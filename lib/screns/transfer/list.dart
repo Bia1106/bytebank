@@ -2,6 +2,8 @@ import 'package:bytebank/models/transfer.dart';
 import 'package:bytebank/screns/transfer/form.dart';
 import 'package:flutter/material.dart';
 
+const _appBarTitle = "Transfers";
+
 class TransferList extends StatefulWidget {
   TransferList({super.key});
   final List<Transfer> _transfers = [];
@@ -44,24 +46,15 @@ class TransferListState extends State<TransferList> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: const Text(
-          'Transfers',
+          _appBarTitle,
           style: TextStyle(color: Colors.white),
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          final Future future = Navigator.push(
-              context, MaterialPageRoute(builder: (context) => TransferForm()));
-          future.then((recievedTransfer) {
-            Future.delayed(const Duration(seconds: 2), () {
-              if (recievedTransfer != null) {
-                setState(() {
-                  // MUITO IMPORTANTE PARA O FUCNIONAMENTO DINÂMICO, NÃO PODE FALTAR
-                  widget._transfers.add(recievedTransfer);
-                });
-              }
-            });
-          });
+          Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => TransferForm()))
+              .then((recievedTransfer) => _update(recievedTransfer));
         },
         backgroundColor: Colors.black,
         child: const Icon(
@@ -70,5 +63,9 @@ class TransferListState extends State<TransferList> {
         ),
       ),
     );
+  }
+
+  _update(Transfer transfer) {
+    setState(() => widget._transfers.add(transfer));
   }
 }
